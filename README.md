@@ -81,3 +81,49 @@ print(main_module.__file__) # "/project/app.py"
   if __name__ == '__main__':
       app.run()
   ```
+  
+### QueryString과 request 객체
+질의문자열이라 부르며 웹사이트의 주소에 물음표 기호와 함께 부가 정보를 조회할때 사용하는 문자열이다.  
+word라는 이름의 파라미터에 문자열 값 'hello'와 num이라는 이름의 파라미터에 문자열 값 '10'을 넘기는 URL은 다음과 같다.  
+```
+https://localhost:port/search?word=hello&num=10
+```
+Flask에서는 request 객체의 하위 객체 args에서 to_dict() 메소드를 통해 dictionary 형태로 값을 조회할 수 있다.  
+- 코드
+  ```py
+  from flask import Flask, reqeust # request import
+  app = Flask(__name__)
+  
+  @app.route('/search')
+  def show_search():
+      args_dict = reqeust.args.to_dict()
+      return args_dict
+  ```
+- 응답 결과
+  ```
+  {
+    "num":"10",
+    "word":"hello"
+  }
+  ```
+
+단일 파라미터의 경우 get 메소드에 key를 전달하여 조회하거나 대괄호(브라켓) 접근법으로 접근 가능하다.   
+- 코드
+  ```py
+  from flask import Flask, reqeust # request import
+  app = Flask(__name__)
+  
+  @app.route("/search")
+  def show_search():
+      args_dict = request.args.to_dict()
+      print(request.args.get('word'))
+      print(request.args['num'])
+      return args_dict
+  ```
+
+  (args 객체는 일반 Dict가 아닌 MultiDict으로, 도트 연산  접근은 지원하지 않는다.)
+  - request.py (157Line)
+    ```py
+    @cached_property
+        def args(self) -> MultiDict[str, str]:
+    ```
