@@ -98,6 +98,9 @@ Flask에서는 request 객체의 하위 객체 args에서 to_dict() 메소드를
   def show_search():
       args_dict = reqeust.args.to_dict()
       return args_dict
+  
+  if __name__ == '__main__':
+      app.run()
   ```
 - 응답 결과
   ```
@@ -117,13 +120,61 @@ Flask에서는 request 객체의 하위 객체 args에서 to_dict() 메소드를
   def show_search():
       args_dict = request.args.to_dict()
       print(request.args.get('word'))
+      # print(request.args.word) # MultiDict 객체이므로 지원하지 않음
       print(request.args['num'])
       return args_dict
+  
+  if __name__ == '__main__':
+      app.run()
   ```
 
-  (args 객체는 일반 Dict가 아닌 MultiDict으로, 도트 연산  접근은 지원하지 않는다.)
+  (args 객체는 클래스의 필드로 구성된 객체가 아닌 MultiDict로, 도트 연산  접근은 지원하지 않는다.)
   - request.py (157Line)
     ```py
     @cached_property
         def args(self) -> MultiDict[str, str]:
     ```
+    
+# Post방식과 파라미터 전달
+
+## 기본 코드
+route 데코레이터의 2번째 인자 설정인 methods에 `methods=['POST']` 를 지정해준다.  
+해당 옵션 생략시 GET 방식으로 조회된다.  
+(`methods=['GET']`와 같이 GET방식을 명시적으로 지정할 수도 있다.)
+```py
+from flask import Flask, reqeust # request import
+app = Flask(__name__)
+
+@app.route('/add', methods=['POST'])
+def add():
+    return 'add'
+
+if __name__ == '__main__':
+      app.run()
+```
+
+### POSTMAN 요청
+![img.png](img.png)
+
+
+## 파라미터 전달(json)
+```py
+from flask import Flask, reqeust # request import
+app = Flask(__name__)
+
+@app.route('/add2', methods=['POST'])
+def add2():
+    data = request.get_json()
+    print(request.get_json().get('word'))
+    # print(request.get_json().word) # Dict이지만, json은 key-value 구조 그 자체이므로 접근 불가
+    print(request.get_json()['num'])
+    return data
+
+if __name__ == '__main__':
+      app.run()
+```
+(get_json() 함수가 반환하는 객체는 일반 Dict. 즉, key-value json 그 자체이므로 접근 불가하다.)
+
+### POSTMAN 요청 및 결과
+body에 json 형태로 전달한다.  
+![img_1.png](img_1.png)
