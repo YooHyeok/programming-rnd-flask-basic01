@@ -1,3 +1,4 @@
+# Flask 설치 및 기동
 
 ## Flask 설치
 ```bash
@@ -18,6 +19,8 @@ pip install flask
       app.run() # 웹서버 기동
   ```
 
+<br>
+
 ## 기동
 ### 실행
 - Pycharm
@@ -36,8 +39,10 @@ pip install flask
 - VSC
   ```bash
   F5
-  ``
-  
+  ```
+
+<br>  
+
 ## 웹 서버 객체 생성과 모듈정보 전달
 웹 서버 객체를 생성할 때 전달되는 __name__ 현재 생성되는 Flask 웹 서버 객체가 해당 모듈의 파일 위치를 기준으로  
 애플리케이션의 루트 경로를 계산하고, template 및 static 같은 리소스 디렉토리를 찾기 위해 사용된다.  
@@ -49,12 +54,16 @@ pip install flask
 import sys
 main_module = sys.modules["__main__"]
 print(main_module) # <module '__main__' from '.../test.py'>
-print(main_module.__file__) # "/project/app.py"
+print(main_module.__file__) # "/project/mysql.py"
 ```
 
-## Get방식 요청 파라미터 전달
+<br>
+<hr>
+<br>
 
-### URL Variable (Variable Rule)
+# Get방식 요청 파라미터 전달
+
+## URL Variable (Variable Rule)
 웹 서버 객체인 app의 route 데코레이터에 url을 지정할 때 중괄호 사이에 `<파라미터명>` 형태로 지정한다.  
 기본적으로 문자열 타입이므로 정수 타입으로 받기 위해서는 파라미터명 앞에 `<int: 파라미터명>` `:` 구분자 기준으로 타입인 int를 지정한다
 - string
@@ -82,7 +91,9 @@ print(main_module.__file__) # "/project/app.py"
       app.run()
   ```
   
-### QueryString과 request 객체
+<br>
+
+## QueryString과 request 객체
 질의문자열이라 부르며 웹사이트의 주소에 물음표 기호와 함께 부가 정보를 조회할때 사용하는 문자열이다.  
 word라는 이름의 파라미터에 문자열 값 'hello'와 num이라는 이름의 파라미터에 문자열 값 '10'을 넘기는 URL은 다음과 같다.  
 ```
@@ -135,6 +146,10 @@ Flask에서는 request 객체의 하위 객체 args에서 to_dict() 메소드를
         def args(self) -> MultiDict[str, str]:
     ```
     
+<br>
+<hr>
+<br>
+
 # Post방식과 파라미터 전달
 
 ## 기본 코드
@@ -178,3 +193,46 @@ if __name__ == '__main__':
 ### POSTMAN 요청 및 결과
 body에 json 형태로 전달한다.  
 ![img_1.png](img_1.png)
+
+<br>
+<hr>
+<br>
+
+# Put / Delete 요청과 파라미터 전달
+
+POST 방식과 동일하다.
+
+## Put
+```py
+from flask import Flask, request
+app = Flask(__name__)
+
+@app.route('/update', methods=['PUT'])
+def update():
+    data = request.get_json()
+    print(request.get_json().get('word'))
+    print(request.get_json()['num'])
+    return data
+
+if __name__ == '__main__':
+    app.run()
+```
+![img_3.png](img_3.png)
+
+## Delete
+```py
+from flask import Flask, request
+app = Flask(__name__)
+
+@app.route('/delete', methods=['DELETE'])
+def delete():
+    data = request.get_json()
+    print(request.get_json().get('word'))
+    print(request.get_json()['num'])
+    return data
+
+if __name__ == '__main__':
+    app.run()
+```
+![img_2.png](img_2.png)
+
