@@ -23,13 +23,23 @@ def show_search():
 
 @app.route('/add', methods=['POST'])
 def add():
-    return 'add'
-
-@app.route('/add2', methods=['POST'])
-def add2():
     data = request.get_json()
     print(request.get_json().get('word'))
     # print(request.get_json().word) # Dict이지만, json은 key-value 구조 그 자체이므로 접근 불가
+    print(request.get_json()['num'])
+    return data
+
+@app.route('/update', methods=['PUT'])
+def update():
+    data = request.get_json()
+    print(request.get_json().get('word'))
+    print(request.get_json()['num'])
+    return data
+
+@app.route('/delete', methods=['DELETE'])
+def delete():
+    data = request.get_json()
+    print(request.get_json().get('word'))
     print(request.get_json()['num'])
     return data
 
