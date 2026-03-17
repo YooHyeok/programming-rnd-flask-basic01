@@ -236,3 +236,36 @@ if __name__ == '__main__':
 ```
 ![img_2.png](img_2.png)
 
+<br>
+<hr>
+<br>
+
+# MySQL 연동 (pymysql)
+
+```commandline
+pip install pymysql
+```
+
+```py
+from flask import Flask, jsonify
+import pymysql # 모듈 import
+
+db = pymysql.connect(host='127.0.0.1', user='root', password='1234', db='board', charset='utf8') # MySQL 데이터베이스 연결 설정
+
+app = Flask(__name__)
+
+@app.route('/articles')
+def all_articles():
+    cursor = db.cursor() # 데이터 접근
+        
+    # SELECT * FROM article ORDER BY id DESC LIMIT 10
+    sql = "SELECT * FROM article ORDER BY id DESC LIMIT %s"
+    cursor.execute(sql, (10,)) # SQL 실행 (Limit절 args 적용)
+    
+    result = cursor.fetchall()
+    print(result)
+    return jsonify(result)
+
+if __name__ == '__main__':
+    app.run()
+```
